@@ -14,8 +14,8 @@ classdef wave;
                 obj.lambda = lambda;
                 obj.height_error = height_error;
                 obj.amp = amp;
-                obj.wavefront_error = 4*pi*height_error/lambda;
-                obj.front = g.circa.*amp*exp(1i*obj.wavefront_error);
+                obj.wavefront_error = 4*pi.*height_error/lambda;
+                obj.front = g.circa.*amp.*exp(1i.*obj.wavefront_error);
             end
         end
         

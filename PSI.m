@@ -23,11 +23,11 @@ classdef PSI
         end
         
         function obj = example(obj,g,how)
-            I1=abs(obj.r+obj.t).^2;
-            I2=abs(exp(1i*2*pi/3).*obj.r + obj.t).^2;
-            I3=abs(exp(1i*4*pi/3).*obj.r + obj.t).^2;
+            I1=abs(obj.r.front+obj.t.front).^2;
+            I2=abs(exp(1i*2*pi/3).*obj.r.front + obj.t.front).^2;
+            I3=abs(exp(1i*4*pi/3).*obj.r.front + obj.t.front).^2;
             obj.wrap=g.circa.*atan2(sqrt(3)/2*(I2-I3),(I1-(I2+I3)/2));
-            obj = obj.unwrap_phase(how);
+            obj = obj.unwrap_phase(how,g);
         end
             
         function obj = unwrap_phase(obj, how,g)
@@ -69,11 +69,20 @@ classdef PSI
             c_lst = linspace(0,0,11);
             abb_options = {Z_00, Z_11, Z_1n1, Z_20, Z_22, Z_2n2, Z_31, Z_3n1, Z_33, Z_3n3, Z_40};
             for i=1:11
-                abe = abb_options(i);
-                c_lst(i) = sum(obj.phase(:).*abe(:))/sum(g.circa(:));
+                abe = cell2mat(abb_options(i));
+                c_lst(i) = nansum(obj.phase(:).*abe(:))/nansum(g.circa(:));
             end
             obj.c_nm = c_lst;
-        end    
+        end 
+        function obj = plot_interference(obj,g)
+            xh = -1:g.resolution:1;
+            I = (abs(obj.r.front+obj.t.front).^2);
+            figure()
+            image(xh,xh,I,'CDataMapping','scaled')
+            set(gca,'visible','off')
+            colormap(gray)
+            shading interp 
+        end
     end
     
 end

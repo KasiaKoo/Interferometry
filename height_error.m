@@ -7,18 +7,18 @@ classdef height_error
     methods
         function obj = height_error(g,func)
             if (nargin > 0)  
-                if func(1) == 'Z'
-                    obj = obj.Zernike(func(2),g);
-                elseif func(1) == 'T'
-                    obj = obj.tilt(func(2),func(3),g);
-                elseif func(1) == 'F'
+                if cell2mat(func(1)) == 'Z'
+                    obj = obj.Zernike(cell2mat(func(2)),g);
+                elseif cell2mat(func(1)) == 'T'
+                    obj = obj.tilt(cell2mat(func(2)),cell2mat(func(3)),g);
+                elseif cell2mat(func(1)) == 'F'
                     obj.distribution = 1;
-                elseif func(1) == 'R'
+                elseif cell2mat(func(1)) == 'R'
                     obj = obj.random(g);
-                    obj.rms = sqrt(nanmean(obj.distribution.*g.circa(:).^2) ...
-                    -nanmean(obj.distribution.*g.circa(:)));
                 end
-                
+                temp_dist = obj.distribution.*g.circa;
+                obj.rms = sqrt(nanmean(temp_dist(:).^2) ...
+                    -nanmean(temp_dist(:)));
             end 
         end
                 
@@ -60,6 +60,7 @@ classdef height_error
             imshow(circular_dist,[]);
         end
         
+%{
         function obj = zernike_coefficients(obj,g)
             Z_00 = 1.*g.circa;
             Z_11 = 2.*g.r.*cos(g.theta).*g.circa;
@@ -81,8 +82,7 @@ classdef height_error
             end
             obj.c_nm = c_nm;
         end
-        
-  
+        %}
     end
 end
 
