@@ -24,22 +24,6 @@ classdef wave;
             obj.front = g.circa.*obj.amp.*exp(1i*obj.wavefront_error);
         end
         
-        function obj = aberration(obj,n,g)
-            Z_00 = 1;
-            Z_11 = 2.*g.r.*cos(g.theta);
-            Z_1n1 = 2.*g.r.*sin(g.theta);
-            Z_20 = sqrt(3).*(2.*(g.r.^2) - 1);
-            Z_22 = sqrt(6).*(g.r.^2).*cos(2.*g.theta);
-            Z_2n2 = sqrt(6).*(g.r.^2).*sin(2.*g.theta);
-            Z_31 = 2*sqrt(2).*(3.*(g.r.^3) - 2.*g.r).*cos(g.theta);
-            Z_3n1 = 2*sqrt(2).*(3.*(g.r.^3) - 2.*g.r).*sin(g.theta);
-            Z_33 = 2*sqrt(2).*(g.r.^3).*cos(3.*g.theta);
-            Z_3n3 = 2*sqrt(2).*(g.r.^3).*sin(3.*g.theta);
-            Z_40 = sqrt(5).*(6.*(g.r.^4) - 6.*(g.r.^2)+1);
-            obj.height_error = eval(n);
-            obj = obj.update(g);
-        
-        end
         function obj = plot_height(obj,D,g)
             if (D==2)
                 xh = -1:g.resolution:1;
