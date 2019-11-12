@@ -12,6 +12,7 @@ classdef geometry
         function obj = geometry(res)
             if (nargin > 0)
                 [obj.x,obj.y] = meshgrid(-1:res:1,-1:res:1);
+                obj.resolution = res;
                 obj.r=sqrt(obj.x.^2+obj.y.^2);
                 obj.theta=atan2(obj.y,obj.x);
                 obj.circa = double(gt(1,obj.r));

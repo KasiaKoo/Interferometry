@@ -5,7 +5,7 @@ classdef height_error
         rms;
     end
     methods
-        function obj = height_error(g,func)
+        function obj = height_error(g,func,shape)
             if (nargin > 0)  
                 if cell2mat(func(1)) == 'Z'
                     obj = obj.Zernike(cell2mat(func(2)),g);
@@ -16,7 +16,7 @@ classdef height_error
                 elseif cell2mat(func(1)) == 'R'
                     obj = obj.random(g);
                 end
-                temp_dist = obj.distribution.*g.circa;
+                temp_dist = obj.distribution.*shape;
                 obj.rms = sqrt(nanmean(temp_dist(:).^2) ...
                     -nanmean(temp_dist(:)));
             end 
