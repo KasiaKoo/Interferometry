@@ -3,6 +3,7 @@ classdef height_error
         distribution;
         shape;
         rms;
+        c_nm;
     end
     methods
         function obj = height_error(g,func,shape)
@@ -60,9 +61,8 @@ classdef height_error
             imshow(circular_dist,[]);
         end
         
-%{
         function obj = zernike_coefficients(obj,g)
-            Z_00 = 1.*g.circa;
+            %Z_00 = 1.*g.circa; %Piston c_00 is calculated as the mean
             Z_11 = 2.*g.r.*cos(g.theta).*g.circa;
             Z_1n1 = 2.*g.r.*sin(g.theta).*g.circa;
             Z_20 = sqrt(3).*(2.*(g.r.^2) - 1).*g.circa;
@@ -73,16 +73,20 @@ classdef height_error
             Z_33 = 2*sqrt(2).*(g.r.^3).*cos(3.*g.theta).*g.circa;
             Z_3n3 = 2*sqrt(2).*(g.r.^3).*sin(3.*g.theta).*g.circa;
             Z_40 = sqrt(5).*(6.*(g.r.^4) - 6.*(g.r.^2)+1).*g.circa;
-            circular_dist = obj.distribution.*g.circa;
-            c_nm = linspace(0,0,11);
-            abb_options = {Z_00, Z_11, Z_1n1, Z_20, Z_22, Z_2n2, Z_31, Z_3n1, Z_33, Z_3n3, Z_40};
-            for i=1:11
-                abe = abb_options(i);
-                c_nm(i) = sum(circular_dist(:).*abe(:))/sum(g.circa(:));
+            c_lst = linspace(0,0,10);
+            abb_options = {Z_11, Z_1n1, Z_20, Z_22, Z_2n2, Z_31, Z_3n1, Z_33, Z_3n3, Z_40};
+            abb_name = {'Tip','Tilt','Defocus','Astigmatism Positive'...
+                ,'Astigmatism Negative','Coma Positive','Coma Negative','Trefoil Positive','Trefoil Negative','Spherical'};
+            for i=1:10
+                abe = cell2mat(abb_options(i));
+                height = obj.distribution;
+                c_lst(i) = nanmean(height(:).*abe(:));
             end
-            obj.c_nm = c_nm;
+            
+            temp_map = containers.Map(abb_name,c_lst);
+            obj.c_nm = [keys(temp_map);values(temp_map)]';
         end
-        %}
+        
     end
 end
 
